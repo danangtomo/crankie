@@ -11,7 +11,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Image src="/logo.gif" width="134" height="64" />
+        <Image src="/logo.gif" alt="crankie logo" width="134" height="64" />
         <h1 className={styles.title}>COMING SOON !</h1>
         <p>The page is under construction</p>
       </main>
