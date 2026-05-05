@@ -104,8 +104,8 @@
     .choice-card { padding: 16px 14px 14px; }
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 8px; }
+  /* Scrollbar — vertical only; hide horizontal track */
+  ::-webkit-scrollbar { width: 8px; height: 0; }
   ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
 </style>
@@ -207,7 +207,7 @@ function Gate({ onChoose, leaving }) {
         <div className="gate-logo" style={{
           position: 'absolute', top: 28, left: 32,
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 13, letterSpacing: '0.06em', color: '#333',
+          fontSize: 13, letterSpacing: '0.06em', color: '#888',
         }}>
           ◣ CRANKIE
         </div>
@@ -217,7 +217,7 @@ function Gate({ onChoose, leaving }) {
 
           <div className="gate-eyebrow" style={{
             fontFamily: '"JetBrains Mono", monospace',
-            fontSize: 10, letterSpacing: '0.22em', color: '#3a3a38',
+            fontSize: 10, letterSpacing: '0.22em', color: '#888',
             textTransform: 'uppercase', marginBottom: 30,
           }}>
             — same studio · three visual languages —
@@ -307,7 +307,7 @@ function Gate({ onChoose, leaving }) {
         <div className="gate-footer" style={{
           marginTop: 40,
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, color: '#222', letterSpacing: '0.1em', textTransform: 'uppercase',
+          fontSize: 10, color: '#666', letterSpacing: '0.1em', textTransform: 'uppercase',
         }}>
           all three tell the same story
         </div>
