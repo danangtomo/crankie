@@ -188,121 +188,130 @@ function Gate({ onChoose, leaving }) {
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9000,
       background: '#080808',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '24px',
+      overflowY: 'auto',
+      overscrollBehavior: 'contain',
       opacity: leaving ? 0 : 1,
       transition: 'opacity 0.5s cubic-bezier(.4,0,.2,1)',
       pointerEvents: leaving ? 'none' : 'all',
     }}>
-
-      {/* Wordmark */}
-      <div className="gate-logo" style={{
-        position: 'absolute', top: 28, left: 32,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 13, letterSpacing: '0.06em', color: '#333',
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '60px 24px 40px',
+        boxSizing: 'border-box',
+        position: 'relative',
       }}>
-        ◣ CRANKIE
-      </div>
 
-      {/* Center block */}
-      <div style={{ textAlign: 'center', maxWidth: 1040, width: '100%' }}>
-
-        <div className="gate-eyebrow" style={{
+        {/* Wordmark */}
+        <div className="gate-logo" style={{
+          position: 'absolute', top: 28, left: 32,
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, letterSpacing: '0.22em', color: '#3a3a38',
-          textTransform: 'uppercase', marginBottom: 30,
+          fontSize: 13, letterSpacing: '0.06em', color: '#333',
         }}>
-          — same studio · three visual languages —
+          ◣ CRANKIE
         </div>
 
-        <h1 className="gate-headline" style={{
-          fontFamily: '"Space Grotesk", system-ui, sans-serif',
-          fontSize: 'clamp(38px, 5.5vw, 72px)',
-          fontWeight: 700, letterSpacing: '-0.03em',
-          color: '#e8e8e3', margin: '0 0 14px', lineHeight: 1.05,
-        }}>
-          We built it three ways.
-        </h1>
+        {/* Center block */}
+        <div style={{ textAlign: 'center', maxWidth: 1040, width: '100%' }}>
 
-        <p className="gate-sub" style={{
-          fontSize: 16, color: '#5a5a58', lineHeight: 1.65,
-          margin: '0 0 52px',
-        }}>
-          Same content. Same studio. Three completely different experiences.<br/>
-          Pick the one that fits how you see things.
-        </p>
+          <div className="gate-eyebrow" style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 10, letterSpacing: '0.22em', color: '#3a3a38',
+            textTransform: 'uppercase', marginBottom: 30,
+          }}>
+            — same studio · three visual languages —
+          </div>
 
-        {/* Cards */}
-        <div className="gate-cards">
-          {CHOICES.map((c) => (
-            <button
-              key={c.id}
-              className="choice-card"
-              onClick={() => onChoose(c.id)}
-              style={{
-                '--card-bg': c.cardBg,
-                '--card-border': c.cardBorder,
-                '--card-accent': c.cardAccent,
-              }}
-            >
-              {/* Top strip accent */}
-              <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                background: `linear-gradient(90deg, ${c.cardAccent}, transparent)`,
-                opacity: 0.6,
-              }} />
+          <h1 className="gate-headline" style={{
+            fontFamily: '"Space Grotesk", system-ui, sans-serif',
+            fontSize: 'clamp(38px, 5.5vw, 72px)',
+            fontWeight: 700, letterSpacing: '-0.03em',
+            color: '#e8e8e3', margin: '0 0 14px', lineHeight: 1.05,
+          }}>
+            We built it three ways.
+          </h1>
 
-              {/* Number */}
-              <div style={{
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: 10, letterSpacing: '0.14em',
-                color: c.cardFgMuted, marginBottom: 16,
-              }}>
-                {c.num}
-              </div>
+          <p className="gate-sub" style={{
+            fontSize: 16, color: '#5a5a58', lineHeight: 1.65,
+            margin: '0 0 52px',
+          }}>
+            Same content. Same studio. Three completely different experiences.<br/>
+            Pick the one that fits how you see things.
+          </p>
 
-              {/* Name */}
-              <div style={{
-                fontFamily: c.nameFont,
-                fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
-                color: c.cardFg, marginBottom: 8, lineHeight: 1.1,
-              }}>
-                {c.name}
-              </div>
+          {/* Cards */}
+          <div className="gate-cards">
+            {CHOICES.map((c) => (
+              <button
+                key={c.id}
+                className="choice-card"
+                onClick={() => onChoose(c.id)}
+                style={{
+                  '--card-bg': c.cardBg,
+                  '--card-border': c.cardBorder,
+                  '--card-accent': c.cardAccent,
+                }}
+              >
+                {/* Top strip accent */}
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: `linear-gradient(90deg, ${c.cardAccent}, transparent)`,
+                  opacity: 0.6,
+                }} />
 
-              {/* Tagline */}
-              <div style={{
-                fontFamily: '"Inter", system-ui, sans-serif',
-                fontSize: 12, fontStyle: 'italic',
-                color: c.cardAccent, marginBottom: 14, opacity: 0.9,
-              }}>
-                {c.tagline}
-              </div>
+                {/* Number */}
+                <div style={{
+                  fontFamily: '"JetBrains Mono", monospace',
+                  fontSize: 10, letterSpacing: '0.14em',
+                  color: c.cardFgMuted, marginBottom: 16,
+                }}>
+                  {c.num}
+                </div>
 
-              {/* Desc */}
-              <div style={{
-                fontFamily: '"Inter", system-ui, sans-serif',
-                fontSize: 13, color: c.cardFgMuted, lineHeight: 1.6,
-              }}>
-                {c.desc}
-              </div>
+                {/* Name */}
+                <div style={{
+                  fontFamily: c.nameFont,
+                  fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
+                  color: c.cardFg, marginBottom: 8, lineHeight: 1.1,
+                }}>
+                  {c.name}
+                </div>
 
-              <div className="card-cta">
-                → ENTER
-              </div>
-            </button>
-          ))}
+                {/* Tagline */}
+                <div style={{
+                  fontFamily: '"Inter", system-ui, sans-serif',
+                  fontSize: 12, fontStyle: 'italic',
+                  color: c.cardAccent, marginBottom: 14, opacity: 0.9,
+                }}>
+                  {c.tagline}
+                </div>
+
+                {/* Desc */}
+                <div style={{
+                  fontFamily: '"Inter", system-ui, sans-serif',
+                  fontSize: 13, color: c.cardFgMuted, lineHeight: 1.6,
+                }}>
+                  {c.desc}
+                </div>
+
+                <div className="card-cta">
+                  → ENTER
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Footer note */}
-      <div className="gate-footer" style={{
-        position: 'absolute', bottom: 24,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 10, color: '#222', letterSpacing: '0.1em', textTransform: 'uppercase',
-      }}>
-        all three tell the same story
+        {/* Footer note */}
+        <div className="gate-footer" style={{
+          marginTop: 40,
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, color: '#222', letterSpacing: '0.1em', textTransform: 'uppercase',
+        }}>
+          all three tell the same story
+        </div>
+
       </div>
     </div>
   );
