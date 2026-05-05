@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Crankie — Software that works while you sleep.</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="directions/terminal/styles.css" />
+<link rel="stylesheet" href="directions/editorial/styles.css" />
+<link rel="stylesheet" href="directions/maximalist/styles.css" />
+
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, sans-serif; background: #080808; }
+
+  @keyframes gateIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+  @keyframes gateFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .gate-eyebrow  { animation: gateIn 0.5s ease 0.1s both; }
+  .gate-headline { animation: gateIn 0.5s ease 0.18s both; }
+  .gate-sub      { animation: gateIn 0.5s ease 0.24s both; }
+  .gate-cards    { animation: gateIn 0.5s ease 0.3s both; }
+  .gate-footer   { animation: gateFade 1s ease 0.9s both; }
+  .gate-logo     { animation: gateFade 0.5s ease 0.05s both; }
+
+  /* Choice card hover & press */
+  .choice-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    padding: 28px 24px 22px;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .choice-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--card-accent) !important;
+    box-shadow: 0 14px 48px color-mix(in srgb, var(--card-accent) 20%, transparent), 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .choice-card:active { transform: translateY(-2px); }
+  .choice-card .card-cta {
+    color: rgba(255,255,255,0.2);
+    transition: color 0.2s ease;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-top: 20px;
+  }
+  .choice-card:hover .card-cta { color: var(--card-accent); }
+
+  /* Back button */
+  .back-btn {
+    position: fixed;
+    bottom: 22px; right: 22px;
+    z-index: 8000;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; letter-spacing: 0.1em;
+    background: rgba(255,255,255,0.05);
+    color: #555;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .back-btn:hover {
+    color: #ccc;
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+  window.__CRANKIE_TWEAKS__ = {
+    "t1Accent": "#c4ff00",
+    "t2Accent": "#bf4625",
+    "t3Accent": "#ff6a4d",
+    "heroLine1": "SOFTWARE",
+    "heroLine2": "THAT WORKS",
+    "heroLine3": "WHILE YOU SLEEP.",
+    "density": "comfortable",
+    "darkMode": true
+  };
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="directions/terminal/index.jsx"></script>
+<script type="text/babel" src="directions/editorial/index.jsx"></script>
+<script type="text/babel" src="directions/maximalist/index.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const CHOICES = [
+  {
+    id: 't1',
+    num: '01',
+    name: 'TERMINAL',
+    tagline: 'If you think in commands.',
+    desc: 'Brutalist. Acid-lime on black. Monospace throughout. Stripped of everything that doesn\'t ship.',
+    cardBg: '#0d0d0b',
+    cardBorder: '#1e1e1c',
+    cardFg: '#e8e8e3',
+    cardAccent: '#c4ff00',
+    cardFgMuted: 'rgba(232,232,227,0.55)',
+    nameFont: '"JetBrains Mono", monospace',
+    bodyBg: '#0a0a0a',
+  },
+  {
+    id: 't2',
+    num: '02',
+    name: 'EDITORIAL',
+    tagline: 'If you think in structure.',
+    desc: 'Magazine grid. Cream and rust. Serif display type. For those who read before they decide.',
+    cardBg: '#ede5d5',
+    cardBorder: '#d3c9b5',
+    cardFg: '#1a1714',
+    cardAccent: '#bf4625',
+    cardFgMuted: 'rgba(26,23,20,0.5)',
+    nameFont: '"Instrument Serif", Georgia, serif',
+    bodyBg: '#f4ede0',
+  },
+  {
+    id: 't3',
+    num: '03',
+    name: 'MAXIMALIST',
+    tagline: 'If you refuse to be boring.',
+    desc: 'Aubergine, coral, chartreuse. Draggable services. Kinetic. Refuses to hold still.',
+    cardBg: '#1e1128',
+    cardBorder: '#2e1b3c',
+    cardFg: '#f0e6ff',
+    cardAccent: '#ff6a4d',
+    cardFgMuted: 'rgba(240,230,255,0.5)',
+    nameFont: '"Space Grotesk", system-ui, sans-serif',
+    bodyBg: '#1a0e1f',
+  },
+];
+
+function Gate({ onChoose, leaving }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9000,
+      background: '#080808',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '24px',
+      opacity: leaving ? 0 : 1,
+      transition: 'opacity 0.5s cubic-bezier(.4,0,.2,1)',
+      pointerEvents: leaving ? 'none' : 'all',
+    }}>
+
+      {/* Wordmark */}
+      <div className="gate-logo" style={{
+        position: 'absolute', top: 28, left: 32,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 13, letterSpacing: '0.06em', color: '#333',
+      }}>
+        ◣ CRANKIE
+      </div>
+
+      {/* Center block */}
+      <div style={{ textAlign: 'center', maxWidth: 1040, width: '100%' }}>
+
+        <div className="gate-eyebrow" style={{
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, letterSpacing: '0.22em', color: '#3a3a38',
+          textTransform: 'uppercase', marginBottom: 30,
+        }}>
+          — same studio · three visual languages —
+        </div>
+
+        <h1 className="gate-headline" style={{
+          fontFamily: '"Space Grotesk", system-ui, sans-serif',
+          fontSize: 'clamp(38px, 5.5vw, 72px)',
+          fontWeight: 700, letterSpacing: '-0.03em',
+          color: '#e8e8e3', margin: '0 0 14px', lineHeight: 1.05,
+        }}>
+          We built it three ways.
+        </h1>
+
+        <p className="gate-sub" style={{
+          fontSize: 16, color: '#5a5a58', lineHeight: 1.65,
+          margin: '0 0 52px',
+        }}>
+          Same content. Same studio. Three completely different experiences.<br/>
+          Pick the one that fits how you see things.
+        </p>
+
+        {/* Cards */}
+        <div className="gate-cards" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 18,
+        }}>
+          {CHOICES.map((c) => (
+            <button
+              key={c.id}
+              className="choice-card"
+              onClick={() => onChoose(c.id)}
+              style={{
+                '--card-bg': c.cardBg,
+                '--card-border': c.cardBorder,
+                '--card-accent': c.cardAccent,
+              }}
+            >
+              {/* Top strip accent */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                background: `linear-gradient(90deg, ${c.cardAccent}, transparent)`,
+                opacity: 0.6,
+              }} />
+
+              {/* Number */}
+              <div style={{
+                fontFamily: '"JetBrains Mono", monospace',
+                fontSize: 10, letterSpacing: '0.14em',
+                color: c.cardFgMuted, marginBottom: 16,
+              }}>
+                {c.num}
+              </div>
+
+              {/* Name */}
+              <div style={{
+                fontFamily: c.nameFont,
+                fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
+                color: c.cardFg, marginBottom: 8, lineHeight: 1.1,
+              }}>
+                {c.name}
+              </div>
+
+              {/* Tagline */}
+              <div style={{
+                fontFamily: '"Inter", system-ui, sans-serif',
+                fontSize: 12, fontStyle: 'italic',
+                color: c.cardAccent, marginBottom: 14, opacity: 0.9,
+              }}>
+                {c.tagline}
+              </div>
+
+              {/* Desc */}
+              <div style={{
+                fontFamily: '"Inter", system-ui, sans-serif',
+                fontSize: 13, color: c.cardFgMuted, lineHeight: 1.6,
+              }}>
+                {c.desc}
+              </div>
+
+              <div className="card-cta">
+                → ENTER
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer note */}
+      <div className="gate-footer" style={{
+        position: 'absolute', bottom: 24,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 10, color: '#222', letterSpacing: '0.1em', textTransform: 'uppercase',
+      }}>
+        all three tell the same story
+      </div>
+    </div>
+  );
+}
+
+function DesignView({ chosen, onBack }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 40);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.55s ease' }}>
+      {chosen === 't1' && <T1.App />}
+      {chosen === 't2' && <T2.App />}
+      {chosen === 't3' && <T3.App />}
+      <button className="back-btn" onClick={onBack}>◣ change direction</button>
+    </div>
+  );
+}
+
+function App() {
+  const [chosen, setChosen]     = useState(null);
+  const [leaving, setLeaving]   = useState(false);
+  const [mounted, setMounted]   = useState(true);
+
+  useEffect(() => {
+    const r = document.documentElement;
+    const t = window.__CRANKIE_TWEAKS__;
+    r.style.setProperty('--t1-accent', t.t1Accent);
+    r.style.setProperty('--t2-accent', t.t2Accent);
+    r.style.setProperty('--t3-accent', t.t3Accent);
+  }, []);
+
+  const choose = (id) => {
+    const bg = { t1: '#0a0a0a', t2: '#f4ede0', t3: '#1a0e1f' };
+    document.body.style.background = bg[id];
+    // hide OS cursor since all 3 designs use custom cursors
+    document.documentElement.style.cursor = 'none';
+    setLeaving(true);
+    setTimeout(() => { setMounted(false); setChosen(id); }, 520);
+  };
+
+  const reset = () => {
+    setChosen(null);
+    setLeaving(false);
+    setMounted(true);
+    document.body.style.background = '#080808';
+    document.documentElement.style.cursor = '';
+  };
+
+  return (
+    <>
+      {mounted && <Gate onChoose={choose} leaving={leaving} />}
+      {chosen && !mounted && <DesignView chosen={chosen} onBack={reset} />}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>
