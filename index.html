@@ -307,10 +307,20 @@ function Gate({ onChoose, leaving }) {
         {/* Footer note */}
         <div className="gate-footer" style={{
           marginTop: 40,
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, color: '#666', letterSpacing: '0.1em', textTransform: 'uppercase',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
         }}>
-          all three tell the same story
+          <div style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 10, color: '#666', letterSpacing: '0.1em', textTransform: 'uppercase',
+          }}>
+            all three tell the same story
+          </div>
+          <div style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 10, color: '#444', letterSpacing: '0.06em',
+          }}>
+            Crankie comes from "crank" — starting an engine. We build and power systems that help businesses run and grow.
+          </div>
         </div>
 
       </div>
